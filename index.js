@@ -2,7 +2,7 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
 const key = process.env.PRIVATE_KEY;
-console.log("I am here");
+
 exports.handler = async (event) => {
     console.log("event", event);
 
