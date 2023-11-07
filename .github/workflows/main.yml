@@ -1,10 +1,8 @@
 name: Deploy
-
 on:
     push:
         branches:
             - master
-
 jobs:
     deploy_lambda:
         runs-on: ubuntu-latest
