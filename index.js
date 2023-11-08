@@ -1,14 +1,10 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
-const key = process.env.PRIVATE_KEY;
+const key = process.env.PrivateKey;
 
 exports.handler = async (event) => {
-    // console.log("event", event);
-
     const token = event["authorizationToken"];
-
-    // console.log("token", token);
 
     let permission = "Deny";
     if (verifyToken(token)) {
@@ -17,7 +13,7 @@ exports.handler = async (event) => {
     const authResponse = {
         principalId: "user",
         policyDocument: {
-            Version: "2012-10-17",
+            Version: "2023-11-08",
             Statement: [
                 {
                     Action: "execute-api:Invoke",
