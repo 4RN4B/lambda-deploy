@@ -4,11 +4,11 @@ const jwt = require("jsonwebtoken");
 const key = process.env.PRIVATE_KEY;
 
 exports.handler = async (event) => {
-    console.log("event", event);
+    // console.log("event", event);
 
     const token = event["authorizationToken"];
 
-    console.log("token", token);
+    // console.log("token", token);
 
     let permission = "Deny";
     if (verifyToken(token)) {
@@ -42,7 +42,7 @@ function verifyToken(token) {
             // if token alg != RS256,  err == invalid signature
 
             if (err) {
-                console.log(err);
+                return false;
             } else if (payload) {
                 return true;
             } else {
