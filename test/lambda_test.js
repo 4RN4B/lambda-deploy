@@ -11,7 +11,7 @@ describe("Lambda Function Tests", () => {
         // Enter the data you want to pass using event to the calling function
         const event = {
             authorizationToken:
-                "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IjlHbW55RlBraGMzaE91UjIybXZTdmduTG83WSIsImtpZCI6IjlHbW55RlBraGMzaE91UjIybXZTdmduTG83WSJ9.eyJhdWQiOiJhcGk6Ly9iNTVkNzJmYy04MDg1LTQ2NzktYWU3Yy1hMzcxNzViYjczZTciLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC9kZGQ2NmNjZS1mZmUxLTQwMjktOTY3Yy01ZTE1ZWY3MzEyN2YvIiwiaWF0IjoxNjk5NDQxMzE1LCJuYmYiOjE2OTk0NDEzMTUsImV4cCI6MTY5OTQ0NTIxNSwiYWlvIjoiRTJWZ1lOREllcS9udHVtRWt2WC9EMDRkZDk4ZUFBQT0iLCJhcHBpZCI6ImI1NWQ3MmZjLTgwODUtNDY3OS1hZTdjLWEzNzE3NWJiNzNlNyIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0L2RkZDY2Y2NlLWZmZTEtNDAyOS05NjdjLTVlMTVlZjczMTI3Zi8iLCJvaWQiOiI5MGM4MWYwZS04ZDJlLTRlMjgtYWY1Yy02YmU3YzAyZWU4ZmMiLCJyaCI6IjAuQVFzQXptelczZUhfS1VDV2ZGNFY3M01TZl94eVhiV0ZnSGxHcm55amNYVzdjLWNMQUFBLiIsInJvbGVzIjpbIkdFVF9NRUFMX0FORF9QQVgiLCJDT05GSVJNRURfQ09VTlRfVVBEQVRFIl0sInN1YiI6IjkwYzgxZjBlLThkMmUtNGUyOC1hZjVjLTZiZTdjMDJlZThmYyIsInRpZCI6ImRkZDY2Y2NlLWZmZTEtNDAyOS05NjdjLTVlMTVlZjczMTI3ZiIsInV0aSI6IlVieWhfcTg1ZDBpYS10cGFGcXVvQUEiLCJ2ZXIiOiIxLjAifQ.doNod-Dg4jdANn7FlM_TrmGuCsNuq9sp70I0wlEOXG_3iQ--crNHyJkC5yH2WvBu-0h7WtcZCgGZClB5nYwguSmE_SacV5Xt1YPQ3RiMqvsBmt2fp2oNnmAWwqmG2WLh4lY17ksYgpldhKdxEasAlMRheSiQak_BrKQLzqcuz_4CtualBZRc_r035zMTiw0yioX3_9dJe8nPppH74eot9x5J9QVERgRoY2JtxY9SgL59DMWCBT1kmgjt5YMAoJRXXuUzKU2RUI8Lt4p1woEnJN3B_nLSLp8qK84BLQ3UgD6PEucMIqeKxktuezR-eyjqJyj8a1apKAUzrSqi4iWGOA",
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IjlHbW55RlBraGMzaE91UjIybXZTdmduTG83WSIsImtpZCI6IjlHbW55RlBraGMzaE91UjIybXZTdmduTG83WSJ9.eyJhdWQiOiJhcGk6Ly9iNTVkNzJmYy04MDg1LTQ2NzktYWU3Yy1hMzcxNzViYjczZTciLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC9kZGQ2NmNjZS1mZmUxLTQwMjktOTY3Yy01ZTE1ZWY3MzEyN2YvIiwiaWF0IjoxNjk5NDQ0NDI2LCJuYmYiOjE2OTk0NDQ0MjYsImV4cCI6MTY5OTQ0ODMyNiwiYWlvIjoiRTJWZ1lEaG5GN211SlVoYTJ0dmtyRWErazJNQkFBPT0iLCJhcHBpZCI6ImI1NWQ3MmZjLTgwODUtNDY3OS1hZTdjLWEzNzE3NWJiNzNlNyIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0L2RkZDY2Y2NlLWZmZTEtNDAyOS05NjdjLTVlMTVlZjczMTI3Zi8iLCJvaWQiOiI5MGM4MWYwZS04ZDJlLTRlMjgtYWY1Yy02YmU3YzAyZWU4ZmMiLCJyaCI6IjAuQVFzQXptelczZUhfS1VDV2ZGNFY3M01TZl94eVhiV0ZnSGxHcm55amNYVzdjLWNMQUFBLiIsInJvbGVzIjpbIkdFVF9NRUFMX0FORF9QQVgiLCJDT05GSVJNRURfQ09VTlRfVVBEQVRFIl0sInN1YiI6IjkwYzgxZjBlLThkMmUtNGUyOC1hZjVjLTZiZTdjMDJlZThmYyIsInRpZCI6ImRkZDY2Y2NlLWZmZTEtNDAyOS05NjdjLTVlMTVlZjczMTI3ZiIsInV0aSI6InpsLWV0MnRWRVVTM3UyRWhlUEtXQUEiLCJ2ZXIiOiIxLjAifQ.rC-U3Zx-GYs1KqXPOlAR1ydUgpTQxhP9Ae8LLZ82WBFt-V48cF0r0P5sRAiO9TXtH8Wb2vQ3jcRLCf7PBpRcEyqPeKNzYsKeBqFJx6daxhmCtB-7plYAXR66qd31D1Ac93yTCg_MH0idCdE17pNE_3Azi9ewFXrBkkPzUTlr1oVtLSrSnP94ank9Us7Qw4RBcJST5H1uFyb6m5hE7caggvdznLLYpKGAcEe8Id-vA58-d13T3ew1fjcSb0915U6IdsHOEpzjUALpoFMsZ6i7H4ukjLo8iJExYi5UcFlPzfWHSnO_w4MprX1ov5QEXxVJxarj8hC4HLv3N9m9bfAGEQ",
             methodArn:
                 "arn:aws:execute-api:us-west-2:123456789012:ymy8tbxw7b/dev/GET/",
         };
@@ -24,7 +24,7 @@ describe("Lambda Function Tests", () => {
         assert.deepStrictEqual(result, {
             principalId: "user",
             policyDocument: {
-                Version: "2012-10-17",
+                Version: "2023-11-08",
                 Statement: [
                     {
                         Action: "execute-api:Invoke",
@@ -57,7 +57,7 @@ describe("Lambda Function Tests", () => {
         assert.deepStrictEqual(result, {
             principalId: "user",
             policyDocument: {
-                Version: "2012-10-17",
+                Version: "2023-11-08",
                 Statement: [
                     {
                         Action: "execute-api:Invoke",
