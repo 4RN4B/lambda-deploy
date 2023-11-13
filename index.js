@@ -1,7 +1,7 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
-const key = process.env.PrivateKey;
+const key = process.env.PrivateKey.replace(/\\n/gm, "\n");
 
 exports.handler = async (event) => {
     const token = event["authorizationToken"];
@@ -13,13 +13,12 @@ exports.handler = async (event) => {
     const authResponse = {
         principalId: "user",
         policyDocument: {
-            Version: "2023-11-08",
+            Version: "2012-10-17",
             Statement: [
                 {
                     Action: "execute-api:Invoke",
                     Effect: `${permission}`,
-                    Resource:
-                        "arn:aws:execute-api:us-west-2:123456789012:ymy8tbxw7b/dev/GET/",
+                    Resource: event["methodArn"],
                 },
             ],
         },
@@ -28,16 +27,18 @@ exports.handler = async (event) => {
 };
 
 function verifyToken(token) {
+    console.log(key);
     const decoded = jwt.verify(
         token,
         key,
         {
-            algorithms: ["RS256"],
+            algorithms: "RS256",
         },
         function (err, payload) {
             // if token alg != RS256,  err == invalid signature
 
             if (err) {
+                console.log(err);
                 return false;
             } else if (payload) {
                 return true;
