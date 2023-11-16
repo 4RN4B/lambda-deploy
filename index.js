@@ -27,7 +27,6 @@ exports.handler = async (event) => {
 };
 
 function verifyToken(token) {
-    console.log(key);
     const decoded = jwt.verify(
         token,
         key,
