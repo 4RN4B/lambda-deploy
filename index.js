@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const key = process.env.PrivateKey.replace(/\\n/gm, "\n");
 
 exports.handler = async (event) => {
-    const token = event["headers"]["authorizationToken"];
+    const token = event.headersauthorizationToken;
 
     let permission = "Deny";
     if (verifyToken(token)) {
@@ -18,7 +18,7 @@ exports.handler = async (event) => {
                 {
                     Action: "execute-api:Invoke",
                     Effect: `${permission}`,
-                    Resource: event["headers"]["methodArn"],
+                    Resource: event.headers.methodArn,
                 },
             ],
         },
