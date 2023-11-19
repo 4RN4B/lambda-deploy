@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const key = process.env.PrivateKey.replace(/\\n/gm, "\n");
 
 exports.handler = async (event) => {
-    const token = event.headersauthorizationToken;
+    const token = event.headers.authorizationToken;
 
     let permission = "Deny";
     if (verifyToken(token)) {
