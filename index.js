@@ -5,31 +5,25 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
 // Retrieve the private key from environment variables and replace newline characters
-const key = process.env.PrivateKey.replace(/\\n/gm, "\n");
+const key = process.env.PRIVATE_KEY.replace(/\\n/gm, "\n");
 
 /**
  * AWS Lambda function for custom authorization in API Gateway.
  *
  * @param {Object} event - The Lambda event object containing information about the HTTP request.
+ * @param {Object} event.headers - The headers of the HTTP request.
+ * @param {string} event.authorizationToken - The authorization token from the request.
+ * @param {string} event.methodArn - The ARN of the invoked method.
  * @returns {Object} - An object representing the authorization response.
+ * @throws {Error} - Throws an error if authorization fails.
  */
-exports.handler = async (event) => {
+exports.handler = async ({ headers, authorizationToken, methodArn }) => {
     try {
         // Extract the JWT token from the request headers or the event itself
-        var token;
-        if (event.headers) {
-            token = event.headers.authorizationToken || "";
-        } else {
-            token = event.authorizationToken || "";
-        }
+        const token = headers?.authorizationToken || authorizationToken || "";
 
         // Set the default permission to "Deny"
-        let permission = "Deny";
-
-        // If the token is valid, set permission to "Allow"
-        if (verifyToken(token)) {
-            permission = "Allow";
-        }
+        const permission = validateToken(token) ? "Allow" : "Deny";
 
         // Build the authorization response object which is an IAM Policy
         const authResponse = {
@@ -39,38 +33,71 @@ exports.handler = async (event) => {
                 Statement: [
                     {
                         Action: "execute-api:Invoke",
-                        Effect: `${permission}`,
-                        Resource: process.env.methodArn,
+                        Effect: permission,
+                        Resource: methodArn,
                     },
                 ],
             },
         };
+
         // Return the authorization response
         return authResponse;
-    } catch (err) {
+    } catch (error) {
         // Log and handle errors
-        console.error(err.message);
+        console.error(
+            `Authorization failed: ${sanitizeErrorMessage(error.message)}`
+        );
+        throw new Error("Authorization failed");
     }
 };
 
 /**
- * Function to verify the validity of a JWT token.
+ * Function to validate and decode a JWT token.
  *
- * @param {string} token - The JWT token to be verified.
- * @returns {boolean} - True if the token is valid, false otherwise.
+ * @param {string} token - The JWT token to be validated and decoded.
+ * @returns {Object|null} - The decoded token if valid, null otherwise.
+ * @throws {Error} - Throws an error if the validation or verification fails.
  */
-function verifyToken(token) {
+function validateToken(token) {
     try {
-        // Verify the token using the provided key and algorithm
-        const decoded = jwt.verify(token, key, {
-            algorithms: "RS256",
-        });
+        // Validate the token format
+        if (!token.startsWith("Bearer ")) {
+            throw new Error("Invalid token format");
+        }
 
-        // Return true if the verification is successful
-        return true;
+        // Extract the actual token value without the "Bearer " prefix
+        const actualToken = token.slice(7);
+
+        // Verify and decode the token using the provided key and algorithm
+        const decoded = jwt.verify(
+            actualToken,
+            key,
+            { algorithms: "RS256" },
+            function (err) {
+                if (err) {
+                    console.log(err);
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        );
+        // Return the decoded token
+        return decoded;
     } catch (error) {
-        // Log and handle errors if the verification fails
-        console.error(error.message);
-        return false;
+        // Log and handle errors if the validation or verification fails
+        console.error(
+            `Token validation failed: ${sanitizeErrorMessage(error.message)}`
+        );
+        throw new Error("Token validation failed");
     }
 }
+
+/**
+ * Function to sanitize error messages by removing newline characters.
+ *
+ * @param {string} errorMessage - The error message to be sanitized.
+ * @returns {string} - The sanitized error message.
+ */
+const sanitizeErrorMessage = (errorMessage) =>
+    errorMessage.replace(/[\r\n]/g, "");
